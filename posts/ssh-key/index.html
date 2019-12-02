@@ -16,7 +16,7 @@
     <meta name="keywords" content="chowkings chowking oldfive blog">
 
 
-<title>提升从Github拉取代码的速度 | ChowKing&#39;s Blog</title>
+<title>在Mac上配置两个Github账号的ssh-key | ChowKing&#39;s Blog</title>
 
 
 
@@ -178,7 +178,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">提升从Github拉取代码的速度</h1>
+            <h1 class="post-title">在Mac上配置两个Github账号的ssh-key</h1>
             
                 <div class="post-meta">
                     
@@ -187,7 +187,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">December 2, 2019&nbsp;&nbsp;11:17:04</a>
+                        Date: <a href="#">December 2, 2019&nbsp;&nbsp;17:26:20</a>
                         </span>
                     
                     
@@ -198,6 +198,8 @@
                             
                                 <a href="/category/Skill/">Skill</a>
                             
+                                <a href="/category/Git/">Git</a>
+                            
                         </span>
                     
                 </div>
@@ -205,30 +207,35 @@
         </header>
 
         <div class="post-content">
-            <h3 id="获取Github相关网站的IP"><a href="#获取Github相关网站的IP" class="headerlink" title="获取Github相关网站的IP"></a>获取Github相关网站的IP</h3><p>访问<a href="https://www.ipaddress.com" target="_blank" rel="noopener">https://www.ipaddress.com</a>，找到页面中下方的输入框IP Address, Domain or Hostname，分别输入github.global.ssl.fastly.net和github.com，查询ip地址。</p>
-<h3 id="修改本地的host文件"><a href="#修改本地的host文件" class="headerlink" title="修改本地的host文件"></a>修改本地的host文件</h3><p>Mac为例，命令行下输入：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/hosts  //有的可能是sudo vi /etc/host</span><br></pre></td></tr></table></figure>
-<p>然后再输入电脑的密码，打开host文件。<br>Windows为例，命令行下输入：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\System32\drivers\etc</span><br></pre></td></tr></table></figure>
+            <p>一般在工作当中，我们不仅只有公司Gitlab账号的ssh-key，还会有一个自己Github账号的ssh-key，那么下面，我教大家如何在自己的Mac上配置两个ssh-key。</p>
+<h3 id="生成两个ssh-key"><a href="#生成两个ssh-key" class="headerlink" title="生成两个ssh-key"></a>生成两个ssh-key</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;github@gmail.com&quot; -f ~/.ssh/id_rsa_github</span><br><span class="line">ssh-keygen -t rsa -C &quot;gitlab@gmail.com&quot; -f ~/.ssh/id_rsa_gitlab</span><br></pre></td></tr></table></figure>
+<p>执行完成后，打开~/.ssh目录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open ~/.ssh</span><br></pre></td></tr></table></figure>
+<p>可以看到在该目录下生成了两对公私钥，即：<br><a href="mailto:github@gmail.com" target="_blank" rel="noopener">github@gmail.com</a>邮箱对应的私钥文件id_rsa_github、公钥文件id_rsa_github.pub；<br><a href="mailto:gitlab@gmail.com" target="_blank" rel="noopener">gitlab@gmail.com</a>邮箱对应的私钥文件id_rsa_gitlab、公钥文件id_rsa_gitlab.pub；</p>
+<h3 id="将公钥文件复制到相应的Github下"><a href="#将公钥文件复制到相应的Github下" class="headerlink" title="将公钥文件复制到相应的Github下"></a>将公钥文件复制到相应的Github下</h3><p>将公钥文件id_rsa_github.pub、id_rsa_gitlab.pub里面的内容复制到相应的Github下。</p>
+<h3 id="设定全局Github账号和公司Gitlab账号"><a href="#设定全局Github账号和公司Gitlab账号" class="headerlink" title="设定全局Github账号和公司Gitlab账号"></a>设定全局Github账号和公司Gitlab账号</h3><p>全局设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;github&quot;</span><br><span class="line">git config --global user.email &quot;github@gmail.com&quot;</span><br></pre></td></tr></table></figure>
+<p>在公司仓库下设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config user.name &quot;gitlab&quot;</span><br><span class="line">git config user.email &quot;gitlab@gmail.com&quot;</span><br></pre></td></tr></table></figure>
+<p>查看某仓库的Git账号：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config user.name</span><br><span class="line">git config user.email</span><br></pre></td></tr></table></figure>
 
-<h3 id="增加host映射"><a href="#增加host映射" class="headerlink" title="增加host映射"></a>增加host映射</h3><p>然后输入字母 <a href="#">i</a> 进行编辑，参考如下，增加github.global.ssl.fastly.net和github.com的映射。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">151.101.185.194   github.global.ssl.fastly.net</span><br><span class="line">192.30.253.112    github.com</span><br></pre></td></tr></table></figure>
-<p>然后输入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Esc键 --&gt; :wq</span><br></pre></td></tr></table></figure>
+<h3 id="创建config文件"><a href="#创建config文件" class="headerlink" title="创建config文件"></a>创建config文件</h3><p>在~/.ssh目录下创建config文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch config</span><br></pre></td></tr></table></figure>
+<p>编辑config文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># github server</span><br><span class="line">Host github.com</span><br><span class="line">Hostname github.com</span><br><span class="line">User github</span><br><span class="line">IdentityFile ~/.ssh/id_rsa_github</span><br><span class="line"></span><br><span class="line"># gitlab server</span><br><span class="line">Host gitlab.com</span><br><span class="line">Hostname gitlab.com</span><br><span class="line">User gitlab</span><br><span class="line">IdentityFile ~/.ssh/id_rsa_gitlab</span><br></pre></td></tr></table></figure>
 
-<h3 id="更新DNS缓存"><a href="#更新DNS缓存" class="headerlink" title="更新DNS缓存"></a>更新DNS缓存</h3><p>Mac为例，如<a href="https://support.apple.com/zh-cn/HT202516" target="_blank" rel="noopener">Apple官网</a>解答，在 OS X v10.10.4 或更高版本中，请使用以下“终端”命令来还原 DNS 缓存设置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo killall -HUP mDNSResponder</span><br></pre></td></tr></table></figure>
-<p>在 OS X v10.10 至 v10.10.3 中，请使用以下“终端”命令来还原 DNS 缓存设置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo discoveryutil mdnsflushcache</span><br></pre></td></tr></table></figure>
-
-<p>Windows为例，命令行下输入：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipconfig /flushdns</span><br></pre></td></tr></table></figure>
-
-<h3 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h3><p>不用得到任何提示，重新git clone即可。</p>
-<blockquote><footer><strong>---</strong><cite>“no news is good news～”</cite></footer></blockquote>
+<h3 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h3><p>测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br><span class="line"></span><br><span class="line">----------输出信息----------</span><br><span class="line">Hi github! You&apos;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@gitlab.pab.com.cn</span><br><span class="line"></span><br><span class="line">----------输出信息----------</span><br><span class="line">Welcome to GitLab, gitlab!</span><br></pre></td></tr></table></figure>
 
 <br>
-<b>PS：方法如果失效，请尝试获取最新的IP，因为IP可能会变动。</b>
+<b>PS：如果到这里你没有成功的话，别急，教你解决问题的终极办法 -- debug</b>
+
+<p>比如测试github：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -vT git@github.com</span><br></pre></td></tr></table></figure>
+<p>-v 是输出编译信息，可以根据编译信息去解决问题，一般都是config文件里面的内容写错了。</p>
+
         </div>
 
         
@@ -237,13 +244,13 @@
                 
                     <p class="copyright-item">
                         <span>Updated:</span>
-                        <span>December 2, 2019&nbsp;&nbsp;17:30:06</span>
+                        <span>December 2, 2019&nbsp;&nbsp;18:37:27</span>
                     </p>
                 
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://chowkings.github.io/posts/speed-up/">http://chowkings.github.io/posts/speed-up/</a></span>
+                        <span><a href="http://chowkings.github.io/posts/ssh-key/">http://chowkings.github.io/posts/ssh-key/</a></span>
                     </p>
                 
                 
@@ -259,6 +266,8 @@
                     
                         <a href="/tag/Github/"># Github</a>
                     
+                        <a href="/tag/Git/"># Git</a>
+                    
                         
                 </span>
             </div>
@@ -270,10 +279,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/posts/set-php-server/">如何启用Mac自带的PHP服务器并自定义目录</a>
             
-            
-            <a class="next" rel="next" href="/posts/why-because/">为什么开始写博客</a>
+            <a class="next" rel="next" href="/posts/set-php-server/">如何启用Mac自带的PHP服务器并自定义目录</a>
             
         </section>
 
