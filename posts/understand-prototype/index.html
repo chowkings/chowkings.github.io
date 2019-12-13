@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="ChowKing">
+
+
+
+    <meta name="description" content="ChowKing's Blog">
+
+
+    <meta name="keywords" content="chowkings chowking oldfive blog">
+
+
+<title>让你一篇文章搞懂原型链 | ChowKing&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/assets/images/hero.gif">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">ChowKing&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archive">Archives</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">ChowKing&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archive">Archives</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">让你一篇文章搞懂原型链</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">ChowKing</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">December 13, 2019&nbsp;&nbsp;10:43:22</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/category/JavaScript/">JavaScript</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="先了解一下对象"><a href="#先了解一下对象" class="headerlink" title="先了解一下对象"></a>先了解一下对象</h3><p>js中一切皆为对象，但是在这里（原型链中），对象分为两类：</p>
+<h4 id="函数对象，包含两种："><a href="#函数对象，包含两种：" class="headerlink" title="函数对象，包含两种："></a>函数对象，包含两种：</h4><ul>
+<li><h5 id="由function创造出来的函数："><a href="#由function创造出来的函数：" class="headerlink" title="由function创造出来的函数："></a>由function创造出来的函数：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function fn()&#123;&#125;;//具名函数</span><br><span class="line">var fn = function()&#123;&#125;;//匿名函数</span><br><span class="line">var fn = new Function();//new Function()对象得到的函数</span><br><span class="line">//以上这三种都是函数对象</span><br></pre></td></tr></table></figure></li>
+<li><h5 id="系统内置的函数对象：Function、Object、Array、String、Number，还有正则对象RegExp、Date对象等。"><a href="#系统内置的函数对象：Function、Object、Array、String、Number，还有正则对象RegExp、Date对象等。" class="headerlink" title="系统内置的函数对象：Function、Object、Array、String、Number，还有正则对象RegExp、Date对象等。"></a>系统内置的函数对象：Function、Object、Array、String、Number，还有正则对象RegExp、Date对象等。</h5></li>
+</ul>
+<h4 id="普通对象，除了函数对象之外的，都是普通对象，new-Foo-得到的也是普通对象，普通对象是没有prototype（原型对象）属性的，也就没有继承和原型链一说；"><a href="#普通对象，除了函数对象之外的，都是普通对象，new-Foo-得到的也是普通对象，普通对象是没有prototype（原型对象）属性的，也就没有继承和原型链一说；" class="headerlink" title="普通对象，除了函数对象之外的，都是普通对象，new Foo()得到的也是普通对象，普通对象是没有prototype（原型对象）属性的，也就没有继承和原型链一说；"></a>普通对象，除了函数对象之外的，都是普通对象，<code>new Foo()</code>得到的也是普通对象，普通对象是没有<code>prototype</code>（原型对象）属性的，也就没有继承和原型链一说；</h4><h3 id="再了解一下对象的属性"><a href="#再了解一下对象的属性" class="headerlink" title="再了解一下对象的属性"></a>再了解一下对象的属性</h3><ul>
+<li>所有对象都有<code>__proto__</code>属性，用来储存继承得到的属性和方法；</li>
+<li>每个函数对象都有<code>prototype</code>（原型对象）属性，用于继承，将其中的属性和方法传递给后代（比如说实例）。</li>
+</ul>
+<p>我们来看一下函数对象的原型链：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String.__proto__ === Function.prototype;</span><br><span class="line">//true</span><br><span class="line">Object.__proto__ === Function.prototype;</span><br><span class="line">//true</span><br><span class="line">Function.__proto__ === Function.prototype;</span><br><span class="line">//true</span><br><span class="line">//Array、String、Number，还有正则对象RegExp、Date对象等都直接继承自Funtion对象······</span><br></pre></td></tr></table></figure>
+<p>可以看出， 一切函数对象（Function、Object、Array、String、Number，还有正则对象RegExp、Date对象等）都直接继承自Funtion对象，Function不仅用于构造函数，还充当了函数对象的构造器，同时也是自己的构造器。</p>
+<h3 id="Talk-is-cheap-show-me-the-code"><a href="#Talk-is-cheap-show-me-the-code" class="headerlink" title="Talk is cheap, show me the code."></a>Talk is cheap, show me the code.</h3><p>我们来验证一下，验证代码很简单。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">function Foo()&#123;</span><br><span class="line">    //...</span><br><span class="line">&#125;</span><br><span class="line">var foo = new Foo();</span><br><span class="line">var obj = new Object();</span><br><span class="line"></span><br><span class="line">//foo的原型链</span><br><span class="line">console.log(foo.__proto__ === Foo.prototype);//true</span><br><span class="line">console.log(Foo.prototype.__proto__ === Object.prototype);//true</span><br><span class="line">console.log(Object.prototype.__proto__ === null);//true</span><br><span class="line"></span><br><span class="line">//Foo的原型链</span><br><span class="line">console.log(Foo.__proto__ === Function.prototype);//true</span><br><span class="line">console.log(Function.prototype.__proto__ === Object.prototype);//true</span><br><span class="line">console.log(Object.prototype.__proto__ === null);//true</span><br><span class="line"></span><br><span class="line">//obj的原型链</span><br><span class="line">console.log(obj.__proto__ === Object.prototype);//true</span><br><span class="line">console.log(Object.prototype.__proto__ === null);//true</span><br></pre></td></tr></table></figure>
+<p>这三条原型链最后一句都是：<code>Object.prototype.__proto__ === null</code>，最直观的结论就是：<code>一切对象都最终继承自Object对象，Object对象直接继承自根源对象null。</code></p>
+<p>我们接下来分析一下这三条原型链到底是怎么回事。</p>
+<h4 id="foo的原型链"><a href="#foo的原型链" class="headerlink" title="foo的原型链"></a>foo的原型链</h4><ul>
+<li>foo为普通对象，它的构造器是Foo，以Foo为原型，得到原型链第一链：<code>foo.__proto__ === Foo.prototype</code>；</li>
+<li>Foo.prototype这个原型对象为普通对象，它的构造器是Object，以Object为原型，得到原型链第二链：<code>Foo.prototype.__proto__ === Object.prototype</code>；</li>
+<li>Object.prototype这个原型对象以null为原型，得到原型链第三链：<code>Object.prototype.__proto__ === null</code>。</li>
+</ul>
+<h4 id="Foo的原型链"><a href="#Foo的原型链" class="headerlink" title="Foo的原型链"></a>Foo的原型链</h4><ul>
+<li>Foo为函数对象，它的构造器是Function，以Function为原型，得到原型链第一条：<code>Foo.__proto__ === Function.prototype</code>；</li>
+<li>Function.prototype这个原型对象是普通对象，它的构造器是Object，以Object为原型，得到原型链第二链：<code>Function.prototype.__proto__ === Object.prototype</code>；</li>
+<li>Object.prototype这个原型对象以null为原型，得到原型链第三链：<code>Object.prototype.__proto__ === null</code>。</li>
+</ul>
+<h4 id="obj的原型链"><a href="#obj的原型链" class="headerlink" title="obj的原型链"></a>obj的原型链</h4><ul>
+<li>这个就很简单了，obj是普通对象，以Object为原型，得到原型链第一链：<code>obj.__proto__ === Object.prototype</code>；</li>
+<li>Object.prototype这个原型对象以null为原型，得到原型链第二链：<code>Object.prototype.__proto__ === null</code>。</li>
+</ul>
+<h4 id="列出原型链的作用"><a href="#列出原型链的作用" class="headerlink" title="列出原型链的作用"></a>列出原型链的作用</h4><ul>
+<li>当js引擎执行对象的属性和方法时，先查找对象上是否存在该属性或方法，不存在则会在对象的原型链上查找；</li>
+<li>故foo有Foo、Object的原型方法，而Foo有Function、Object的原型方法；</li>
+<li>而foo的原型链没有延伸到Function上，所以foo没有Function的原型方法;<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">如：bind是Function上的原型方法，Foo有bind，而foo没有</span><br><span class="line">Function.bind() =&gt; ƒ bind() &#123; [native code] &#125;</span><br><span class="line">Foo.bind =&gt; ƒ bind() &#123; [native code] &#125;</span><br><span class="line">foo.bind =&gt; undefined</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>找出一个对象的原型链只需两步：</p>
+<ul>
+<li>判断这个对象是普通对象还是函数对象，从而得到函数的构造器；</li>
+<li>对象.<strong>proto</strong> === 构造器.prototype。</li>
+</ul>
+<br>
+
+<p><em>预埋一个知识点，构造器的原型对象上的<a href="">constructor</a>属性指回构造器本身。</em></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                
+                    <p class="copyright-item">
+                        <span>Updated:</span>
+                        <span>December 13, 2019&nbsp;&nbsp;10:49:44</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://chowkings.github.io/posts/understand-prototype/">http://chowkings.github.io/posts/understand-prototype/</a></span>
+                    </p>
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tag/%E5%8E%9F%E5%9E%8B%E9%93%BE/"># 原型链</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();" target="">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/posts/ssh-key/">在Mac上配置两个Github账号的ssh-key</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© ChowKing | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>
